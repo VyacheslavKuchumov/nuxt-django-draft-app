@@ -1,22 +1,12 @@
-// plugins/vuetify.ts
-import { defineNuxtPlugin } from '#app'
-import { createVuetify }      from 'vuetify'
-import * as components        from 'vuetify/components'
-import * as directives        from 'vuetify/directives'
-// Vuetify’s global styles
-import 'vuetify/styles'
+// import this after install `@mdi/font` package
 import '@mdi/font/css/materialdesignicons.css'
 
-export default defineNuxtPlugin(nuxtApp => {
-  const vuetify = createVuetify({
-    components,
-    directives,
-    ssr: true,         // ensure SSR works
-    icons: {
-      defaultSet: 'mdi',
-    },
-    // you can customize themes here
-  })
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
 
-  nuxtApp.vueApp.use(vuetify)
+export default defineNuxtPlugin((app) => {
+  const vuetify = createVuetify({
+    // ... your configuration
+  })
+  app.vueApp.use(vuetify)
 })

@@ -1,27 +1,27 @@
-// nuxt.config.ts
 
-import vuetify from 'vite-plugin-vuetify'
-
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
-  compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
-
-  // still need to transpile Vuetify into your build
+  
   build: {
     transpile: ['vuetify'],
   },
-
+  modules: [
+    (_options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig', (config) => {
+        // @ts-expect-error
+        config.plugins.push(vuetify({ autoImport: true }))
+      })
+    },
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@nuxt/content',
+    '@nuxt/test-utils',
+    "@prisma/nuxt"
+  ],
   vite: {
-    plugins: [
-      // auto-import SFCs, directives & styles
-      vuetify({ autoImport: true }),
-    ],
     vue: {
       template: {
-        transformAssetUrls: {
-          // if you need to transform imgs in Vuetify components
-          ...vuetify.transformAssetUrls,
-        },
+        transformAssetUrls,
       },
     },
   },

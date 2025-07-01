@@ -1,11 +1,7 @@
 <template>
-  <v-app>
-    <AppHeader />
-    <v-main>
+  <NuxtLayout>
+    <v-app>
       <NuxtPage />
-    </v-main>
-    <AppFooter />
-  </v-app>
-    
-
+    </v-app>
+  </NuxtLayout>
 </template>
