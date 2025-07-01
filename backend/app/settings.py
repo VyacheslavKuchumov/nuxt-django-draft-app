@@ -11,19 +11,27 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v09+h8^x*lnq^l(2s)b#b(4t-$nh%m%8o+6vtdn=h7n#u23-jk'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# 2. Read .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# 3. Replace hard‑coded settings
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -82,14 +90,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "Sz01E4daplkfJSWMqv1AekyAAJHOirHQuHjF4GhA5Ld8qDiMR9IqetmjwpSJQjo9",
-        "HOST": "185.103.109.90",
-        "PORT": "5555",
-    }
+    'default': env.db(),
 }
 
 
