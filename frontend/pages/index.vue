@@ -17,6 +17,7 @@
             <v-list-item v-for="page in pages" :key="page.name">
               <v-btn :to="page.path" color="primary" width="50%">{{ page.name }}</v-btn>
             </v-list-item>
+
           </v-list>
         </v-card>
       </v-col>

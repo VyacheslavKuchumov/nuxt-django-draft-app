@@ -33,7 +33,13 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['https://django-test.vyachik-dev.ru', 'localhost', '127.0.0.1', '0.0.0.0', '*']
+ALLOWED_HOSTS = ['https://django-test.vyachik-dev.ru', 'localhost', '127.0.0.1', '0.0.0.0', 'http://localhost:3000']
+
+CORS_ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://nuxt-test.vyachik-dev.ru'
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://django-test.vyachik-dev.ru',
@@ -56,6 +62,7 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,6 +78,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',   # must come before CommonMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

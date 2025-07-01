@@ -1,4 +1,14 @@
 <template>
+  <v-overlay
+      :model-value="overlay"
+      class="align-center justify-center"
+    >
+      <v-progress-circular
+        color="primary"
+        size="64"
+        indeterminate
+      ></v-progress-circular>
+  </v-overlay>
   <v-container max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
     <v-card-title class="text-wrap" align="center">
       Управление клиентами
@@ -92,25 +102,27 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { useFetch } from '#app'
 
+const config = useRuntimeConfig()
 // Заголовки таблицы
 const headers = [
-  { text: 'ID', value: 'customer_id' },
-  { text: 'Имя клиента', value: 'customer_name' },
-  { text: 'Действия', value: 'actions', sortable: false },
+  { title: 'ID', key: 'id' },
+  { title: 'Имя клиента', key: 'customer_name' },
+  { title: 'Действия', key: 'actions', sortable: false },
 ]
 
 // Получаем список клиентов
-const { data, pending, refresh } = useFetch('/api/customers', { method: 'get' })
+const { data, pending, refresh } = useFetch(`${config.public.apiUrl}/api/customers/`, { method: 'get', server: false,  lazy: true })
 const customers = computed(() => data.value ?? [])
+
+// Состояние загрузки
+const overlay = ref(false)
 
 // Состояние диалогов и формы
 const editDialog = ref(false)
 const confirmDeleteDialog = ref(false)
 const editingCustomer = ref(false)
-const customerForm = reactive({ customer_id: null, customer_name: '' })
+const customerForm = reactive({ id: null, customer_name: '' })
 const customerToDelete = ref(null)
 const valid = ref(false)
 const formRef = ref(null)
@@ -123,7 +135,7 @@ const rules = {
 // Открыть форму создания
 function openCreateDialog() {
   editingCustomer.value = false
-  customerForm.customer_id = null
+  customerForm.id = null
   customerForm.customer_name = ''
   editDialog.value = true
 }
@@ -131,7 +143,7 @@ function openCreateDialog() {
 // Открыть форму редактирования
 function openEditDialog(item) {
   editingCustomer.value = true
-  customerForm.customer_id = item.customer_id
+  customerForm.id = item.id
   customerForm.customer_name = item.customer_name
   editDialog.value = true
 }
@@ -146,19 +158,19 @@ function closeEditDialog() {
 async function saveCustomer() {
   await formRef.value.validate()
   if (!valid.value) return
-
+  overlay.value = true
   if (editingCustomer.value) {
-    await $fetch(`/api/customers/${customerForm.customer_id}`, {
-      method: 'PUT',
+    await $fetch(`${config.public.apiUrl}/api/customers/${customerForm.id}/`, {
+      method: 'put',
       body: { customer_name: customerForm.customer_name },
     })
   } else {
-    await $fetch('/api/customers', {
-      method: 'POST',
+    await $fetch(`${config.public.apiUrl}/api/customers/`, {
+      method: 'post',
       body: { customer_name: customerForm.customer_name },
     })
   }
-
+  overlay.value = false
   editDialog.value = false
   await refresh()
 }
@@ -176,11 +188,13 @@ function closeConfirmDialog() {
 
 // Подтвердить удаление
 async function deleteConfirmed() {
-  await $fetch(`/api/customers/${customerToDelete.value.customer_id}`, {
+  overlay.value = true
+  await $fetch(`${config.public.apiUrl}/api/customers/${customerToDelete.value.id}/`, {
     method: 'DELETE',
   })
   confirmDeleteDialog.value = false
   await refresh()
+  overlay.value = false
 }
 </script>
 
