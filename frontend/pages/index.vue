@@ -10,7 +10,7 @@
           </v-card-title>
           <v-card-text class="text-body-1 text-justify">
             Это макет full-stack приложения на Nuxt 3 и Django.
-            UI фреймворк - Vuetify, а в качестве базы данных используется Postgres
+            В качестве UI-фреймворка используется Vuetify, а в качестве базы данных - Postgres.
           </v-card-text>
           <!-- v-list для кнопок v-btn с навигацией -->
           <v-list>

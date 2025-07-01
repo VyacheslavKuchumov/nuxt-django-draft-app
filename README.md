@@ -1,1 +1,1 @@
-# vite-fastapi-draft-app
+# Nuxt 3 and Django Test App
