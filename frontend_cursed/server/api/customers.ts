@@ -3,10 +3,6 @@ import prisma from "~/lib/prisma"
 
 export default defineEventHandler(async (event) => {
 
-  const customers = await prisma.customers.findMany({
-    include: {
-      Orders: true
-    }
-  })
+  const customers = await prisma.customers.findMany()
   return customers
 })

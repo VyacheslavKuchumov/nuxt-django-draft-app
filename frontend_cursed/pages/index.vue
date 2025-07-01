@@ -28,7 +28,7 @@
 
 
 const pages = ref([
-  { name: 'Клиенты', path: '/clients' },
+  { name: 'Клиенты', path: '/customers' },
   { name: 'Заказы', path: '/orders' },
   { name: 'Продукты', path: '/products' }
 ]);

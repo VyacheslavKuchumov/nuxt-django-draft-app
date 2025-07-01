@@ -18,11 +18,18 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     "@prisma/nuxt"
   ],
-  vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
+   vite: {
+    // keep Vuetify’s transformAssetUrls
+    vue: { template: { transformAssetUrls } },
+
+    // 1a. Don’t optimize Prisma during dev
+    optimizeDeps: {
+      exclude: ['@prisma/client']
     },
+    // 1b. Don’t include Prisma in SSR client bundle
+    ssr: {
+      external: ['@prisma/client']
+    }
   },
+  
 })
