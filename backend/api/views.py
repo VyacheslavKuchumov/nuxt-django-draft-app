@@ -1,32 +1,46 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from . import models
+# views.py
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Customer
+from .serializers import CustomerSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
-# Create your views here.
 
-# CRUD for customers
-def create_customer(request):
-    if request.method == "POST":
-        customer_name = request.POST.get("customer_name")
-        customer = models.Customer.objects.create(customer_name=customer_name)
-        return HttpResponse(f"Customer created: {customer}")
-    return render(request, "create_customer.html")
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def customer_list(request):
+    if request.method == 'GET':
+        customers = Customer.objects.all()
+        serializer = CustomerSerializer(customers, many=True)
+        return Response(serializer.data)
 
-def read_customers(request):
-    customers = models.Customer.objects.all()
-    return render(request, "read_customers.html", {"customers": customers})
+    elif request.method == 'POST':
+        serializer = CustomerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def update_customer(request, customer_id):
-    customer = models.Customer.objects.get(id=customer_id)
-    if request.method == "PUT":
-        customer.customer_name = request.PUT.get("customer_name")
-        customer.save()
-        return HttpResponse(f"Customer updated: {customer}")
-    return render(request, "update_customer.html", {"customer": customer})
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([AllowAny])
+def customer_detail(request, pk):
+    try:
+        customer = Customer.objects.get(pk=pk)
+    except Customer.DoesNotExist:
+        return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-def delete_customer(request, customer_id):
-    customer = models.Customer.objects.get(id=customer_id)
-    if request.method == "DELETE":
+    if request.method == 'GET':
+        serializer = CustomerSerializer(customer)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = CustomerSerializer(customer, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
         customer.delete()
-        return HttpResponse("Customer deleted")
-    return render(request, "delete_customer.html", {"customer": customer})
+        return Response(status=status.HTTP_204_NO_CONTENT)
