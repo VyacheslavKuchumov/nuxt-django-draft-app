@@ -9,8 +9,8 @@
             Добро пожаловать!
           </v-card-title>
           <v-card-text class="text-body-1 text-justify">
-            Это макет full-stack приложения на Nuxt 3 с Vuetify.
-            В качестве базы данных используется Postgres, а для ORM - Prisma.
+            Это макет full-stack приложения на Nuxt 3 и Django.
+            UI фреймворк - Vuetify, а в качестве базы данных используется Postgres
           </v-card-text>
           <!-- v-list для кнопок v-btn с навигацией -->
           <v-list>
