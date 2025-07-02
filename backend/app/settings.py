@@ -68,6 +68,9 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",                  # must be first
+    "unfold.contrib.filters",  # optional: numeric, date, slider filters
+    "unfold.contrib.forms",    # optional: rich form widgets (e.g. WYSIWYG)
     'corsheaders',
     'rest_framework',
     'django_filters',
