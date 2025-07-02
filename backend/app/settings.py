@@ -50,7 +50,13 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,   # default items per page; can be overridden per‑view
+    'DEFAULT_FILTER_BACKENDS': [
+    'django_filters.rest_framework.DjangoFilterBackend',
+    'rest_framework.filters.OrderingFilter',
+],
 }
 
 INTERNAL_IPS = [
@@ -64,6 +70,7 @@ INTERNAL_IPS = [
 INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
